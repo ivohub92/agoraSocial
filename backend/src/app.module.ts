@@ -12,9 +12,18 @@ import { UsersModule } from './users/users.module.js';
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        uri: config.get<string>('MONGODB_URI'),
-      }),
+      useFactory: (config: ConfigService) => {
+        const uri = config.get<string>('MONGODB_URI')?.trim();
+        if (!uri) {
+          // Solo se muestran nombres de variables, nunca sus valores.
+          const parecidas = Object.keys(process.env).filter((k) => /mongo|uri/i.test(k));
+          throw new Error(
+            `Falta la variable de entorno MONGODB_URI. ` +
+              `Variables con nombre parecido: ${parecidas.join(', ') || 'ninguna'}`,
+          );
+        }
+        return { uri };
+      },
     }),
     // En local las imágenes se sirven desde /uploads; en Vercel las sirve Vercel Blob.
     ...(usaVercelBlob()

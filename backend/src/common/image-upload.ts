@@ -9,10 +9,15 @@ import { memoryStorage } from 'multer';
 export const UPLOADS_DIR = join(process.cwd(), 'uploads');
 
 /**
- * En Vercel el disco no es persistente: si está configurado Vercel Blob
- * (variable BLOB_READ_WRITE_TOKEN) las imágenes se suben ahí; si no, a /uploads.
+ * En Vercel el disco no es persistente, así que ahí las imágenes van a Vercel Blob
+ * (que se autentica con BLOB_STORE_ID o BLOB_READ_WRITE_TOKEN); en local, a /uploads.
  */
-export const usaVercelBlob = () => Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+export const usaVercelBlob = () =>
+  Boolean(
+    process.env.VERCEL ||
+      process.env.BLOB_STORE_ID ||
+      process.env.BLOB_READ_WRITE_TOKEN,
+  );
 
 /**
  * La imagen se mantiene en memoria y solo se guarda cuando el resto de los datos
