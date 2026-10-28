@@ -1,0 +1,33 @@
+// Usa .dialog-backdrop / .dialog del sistema; en estas pantallas nada flota,
+// así que la caja se define con una regla de 2px en lugar de sombra.
+.dialog-backdrop {
+  z-index: 1000;
+}
+
+.dialog {
+  border: 2px solid var(--color-text);
+  border-top: 8px solid var(--color-text);
+  background: var(--color-bg);
+  box-shadow: none;
+  padding: 24px;
+  gap: 8px;
+
+  &.error {
+    border-top-color: var(--color-accent);
+  }
+}
+
+.kicker {
+  margin-bottom: 0;
+}
+
+.dialog-title {
+  font-size: 25px;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+}
+
+.dialog-body {
+  white-space: pre-line;
+  font-size: 15px;
+}

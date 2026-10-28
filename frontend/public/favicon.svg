@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Favicon de Ágora: cuadrado de acento sin radio y una "Á" blanca geométrica -->
+  <rect width="64" height="64" fill="#ec3013"/>
+  <path fill="#fff" fill-rule="evenodd" d="M13 56 L26.5 17 H37.5 L51 56 H41.5 L39 47.5 H25 L22.5 56 Z M27.6 39.5 H36.4 L32 25 Z"/>
+  <path fill="#fff" d="M29 13 L34.5 5 H42 L35 13 Z"/>
+</svg>

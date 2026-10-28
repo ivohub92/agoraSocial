@@ -1,0 +1,61 @@
+@if (auth.usuario(); as u) {
+  <div class="cols">
+    <aside class="side left">
+      <app-avatar class="foto" [usuario]="u" variante="propio" />
+      <h2>{{ u.nombre }} {{ u.apellido }}</h2>
+      <div class="handle">
+        &#64;{{ u.nombreUsuario }}
+        <span class="tag" [class]="u.perfil === 'administrador' ? 'tag-accent' : 'tag-outline'">
+          {{ u.perfil === 'administrador' ? 'Administrador' : 'Usuario' }}
+        </span>
+      </div>
+      @if (u.descripcion) {
+        <p class="bio">{{ u.descripcion }}</p>
+      }
+      <div class="stats">
+        <div><div class="num">{{ edad() }}</div><div class="lbl">Años</div></div>
+        <div><div class="num">{{ u.createdAt | date: 'yyyy' }}</div><div class="lbl">Desde</div></div>
+      </div>
+      <a routerLink="/publicaciones" class="btn btn-secondary btn-block">Ir a la cronología</a>
+    </aside>
+
+    <main class="col-main">
+      <div class="section-head">
+        <div class="title">Datos de la cuenta</div>
+        <div class="line"></div>
+        <div class="meta">Miembro desde {{ u.createdAt | date: 'MMMM yyyy' }}</div>
+      </div>
+
+      <dl>
+        <div><dt>Nombre</dt><dd>{{ u.nombre }}</dd></div>
+        <div><dt>Apellido</dt><dd>{{ u.apellido }}</dd></div>
+        <div><dt>Usuario</dt><dd>&#64;{{ u.nombreUsuario }}</dd></div>
+        <div><dt>Correo</dt><dd>{{ u.correo }}</dd></div>
+        <div><dt>Fecha de nacimiento</dt><dd>{{ u.fechaNacimiento | date: 'd/MM/yyyy' : 'UTC' }}</dd></div>
+        <div><dt>Perfil</dt><dd>{{ u.perfil === 'administrador' ? 'Administrador' : 'Usuario' }}</dd></div>
+        <div class="full"><dt>Descripción</dt><dd>{{ u.descripcion || '—' }}</dd></div>
+      </dl>
+
+      <div class="section-head">
+        <div class="title">Mis publicaciones</div>
+        <div class="line"></div>
+        <div class="meta">0 en total</div>
+      </div>
+
+      <div class="empty">
+        <div class="kicker">Sin publicaciones</div>
+        <h3>Todavía no publicaste nada</h3>
+        <p>Cuando publiques, tus últimas publicaciones y sus comentarios van a aparecer acá.</p>
+      </div>
+    </main>
+  </div>
+} @else {
+  <main class="col-main sin-sesion">
+    <div class="empty">
+      <div class="kicker">Mi perfil</div>
+      <h3>Necesitás iniciar sesión</h3>
+      <p>El contenido de Ágora es privado: iniciá sesión para ver los datos de tu perfil.</p>
+      <a routerLink="/login" class="btn btn-primary">Iniciar sesión</a>
+    </div>
+  </main>
+}

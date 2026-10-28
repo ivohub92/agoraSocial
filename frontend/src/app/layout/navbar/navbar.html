@@ -1,0 +1,23 @@
+<header>
+  <a routerLink="/publicaciones" class="brand">Ágora</a>
+
+  <nav>
+    <a routerLink="/publicaciones" routerLinkActive="activo">Publicaciones</a>
+    <a routerLink="/mi-perfil" routerLinkActive="activo">Mi perfil</a>
+    @if (!auth.logueado()) {
+      <a routerLink="/login" routerLinkActive="activo">Ingresar</a>
+      <a routerLink="/registro" routerLinkActive="activo">Registrarse</a>
+    }
+  </nav>
+
+  @if (auth.usuario(); as u) {
+    <div class="user">
+      <app-avatar [usuario]="u" [size]="36" variante="en-barra" />
+      <div class="who">
+        {{ u.nombre }} {{ u.apellido[0] }}.
+        <small>&#64;{{ u.nombreUsuario }}</small>
+      </div>
+      <button class="salir" (click)="salir()">Salir</button>
+    </div>
+  }
+</header>

@@ -1,0 +1,329 @@
+// Capa de la aplicación sobre el sistema Modernist (src/styles/modernist.css).
+// Usar siempre sus variables: sin radios, reglas de 2px, sin sombras ni animaciones.
+
+html,
+body {
+  min-height: 100%;
+}
+
+a {
+  color: var(--color-accent-700);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--color-accent-600);
+    text-decoration: underline;
+  }
+}
+
+.link {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+  font-weight: 600;
+  color: var(--color-accent-700);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.kicker {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--color-accent-700);
+  margin-bottom: 12px;
+}
+
+.rule {
+  height: 2px;
+  background: var(--color-divider);
+  margin: 6px 0;
+}
+
+// ---------- Formularios ----------
+.form-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.row-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+
+  @media (max-width: 560px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.field {
+  > label {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 6px;
+  }
+
+  .hint,
+  .error {
+    font-size: 12px;
+    margin-top: 6px;
+  }
+
+  .hint {
+    color: var(--color-neutral-700);
+  }
+
+  .error {
+    font-weight: 600;
+    color: var(--color-accent-700);
+  }
+}
+
+.input.invalid {
+  border-color: var(--color-accent);
+  box-shadow: inset 0 0 0 1px var(--color-accent);
+}
+
+.check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.5;
+  cursor: pointer;
+
+  input {
+    width: 16px;
+    height: 16px;
+    margin: 3px 0 0;
+    accent-color: var(--color-accent);
+  }
+}
+
+.switch-line {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 14px;
+
+  span {
+    color: var(--color-neutral-800);
+  }
+
+  a {
+    font-weight: 600;
+  }
+}
+
+// ---------- Pantallas de acceso (login / registro) ----------
+.auth {
+  display: grid;
+  min-height: 100vh;
+}
+
+.auth-form {
+  padding: 56px 56px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  h1 {
+    font-size: clamp(32px, 3.4vw, 44px);
+    margin: 0 0 8px;
+  }
+
+  .lead {
+    margin: 0 0 28px;
+    color: var(--color-neutral-800);
+    max-width: 42ch;
+  }
+}
+
+.poster {
+  background: var(--color-accent);
+  color: #fff;
+  padding: 56px 56px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 40px;
+
+  .brand {
+    font-size: 13px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-weight: 800;
+  }
+
+  .headline {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    text-wrap: pretty;
+  }
+
+  .white-rule {
+    height: 2px;
+    background: #fff;
+    margin: 28px 0 20px;
+    max-width: 340px;
+  }
+
+  .foot {
+    border-top: 2px solid #fff;
+    padding-top: 16px;
+  }
+}
+
+@media (max-width: 900px) {
+  .auth {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .auth-form,
+  .poster {
+    padding: 32px 16px;
+  }
+
+  .poster {
+    order: 2;
+  }
+}
+
+// ---------- Pantallas con columnas (publicaciones / perfil) ----------
+.cols {
+  display: grid;
+  align-items: start;
+}
+
+.side {
+  background: var(--color-surface);
+  padding: 24px;
+  position: sticky;
+  top: 64px;
+  min-height: calc(100vh - 64px);
+
+  &.left {
+    border-right: 2px solid var(--color-text);
+  }
+
+  &.right {
+    border-left: 2px solid var(--color-text);
+  }
+}
+
+.col-main {
+  background: var(--color-neutral-100);
+  padding: 24px;
+  min-width: 0;
+  min-height: calc(100vh - 64px);
+}
+
+@media (max-width: 900px) {
+  .cols {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .side {
+    position: static;
+    min-height: 0;
+    padding: 24px 16px;
+
+    &.left,
+    &.right {
+      border: 0;
+      border-bottom: 2px solid var(--color-text);
+    }
+  }
+
+  .col-main {
+    min-height: 0;
+    padding: 24px 16px;
+  }
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+
+  .title {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .line {
+    flex: 1;
+    height: 2px;
+    background: var(--color-text);
+  }
+
+  .meta {
+    font-size: 12px;
+    color: var(--color-neutral-700);
+  }
+}
+
+.side-title {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  border-bottom: 2px solid var(--color-text);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.stats {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  border-top: 2px solid var(--color-divider);
+  border-bottom: 2px solid var(--color-divider);
+  padding: 12px 0;
+  margin-bottom: 16px;
+
+  .num {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 18px;
+  }
+
+  .lbl {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-neutral-700);
+  }
+}
+
+.empty {
+  border: 2px solid var(--color-text);
+  background: var(--color-bg);
+  padding: 24px;
+
+  h3 {
+    margin: 0 0 8px;
+  }
+
+  p {
+    margin: 0 0 16px;
+    color: var(--color-neutral-800);
+    max-width: 52ch;
+  }
+
+  > :last-child {
+    margin-bottom: 0;
+  }
+}

@@ -1,0 +1,236 @@
+{
+  "info": {
+    "name": "Red social - Sprint 1",
+    "description": "Pruebas de la API del Sprint 1 (registro y login). Cambiar la variable baseUrl para apuntar al backend desplegado.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000" },
+    { "key": "correo", "value": "prueba@test.com" },
+    { "key": "nombreUsuario", "value": "prueba" },
+    { "key": "password", "value": "Clave1234" }
+  ],
+  "item": [
+    {
+      "name": "Autenticación",
+      "item": [
+        {
+          "name": "Registro OK (201)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Genera correo y usuario únicos para poder ejecutar la colección varias veces",
+                  "const n = Date.now();",
+                  "pm.collectionVariables.set('correo', `prueba${n}@test.com`);",
+                  "pm.collectionVariables.set('nombreUsuario', `prueba${n}`);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 201 Created', () => pm.response.to.have.status(201));",
+                  "const u = pm.response.json();",
+                  "pm.test('No devuelve la contraseña', () => pm.expect(u).to.not.have.property('password'));",
+                  "pm.test('Perfil por defecto: usuario', () => pm.expect(u.perfil).to.eql('usuario'));",
+                  "pm.test('Tiene id', () => pm.expect(u._id).to.be.a('string'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/registro",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "nombre", "value": "Juan", "type": "text" },
+                { "key": "apellido", "value": "Pérez", "type": "text" },
+                { "key": "correo", "value": "{{correo}}", "type": "text" },
+                { "key": "nombreUsuario", "value": "{{nombreUsuario}}", "type": "text" },
+                { "key": "password", "value": "{{password}}", "type": "text" },
+                { "key": "repetirPassword", "value": "{{password}}", "type": "text" },
+                { "key": "fechaNacimiento", "value": "2000-05-10", "type": "text" },
+                { "key": "descripcion", "value": "Usuario de prueba", "type": "text" },
+                { "key": "imagenPerfil", "type": "file", "src": [], "description": "Opcional: elegir una imagen JPG/PNG/WEBP/GIF", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Registro duplicado (409)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.test('Status 409 Conflict', () => pm.response.to.have.status(409));"]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/registro",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "nombre", "value": "Juan", "type": "text" },
+                { "key": "apellido", "value": "Pérez", "type": "text" },
+                { "key": "correo", "value": "{{correo}}", "type": "text" },
+                { "key": "nombreUsuario", "value": "{{nombreUsuario}}", "type": "text" },
+                { "key": "password", "value": "{{password}}", "type": "text" },
+                { "key": "repetirPassword", "value": "{{password}}", "type": "text" },
+                { "key": "fechaNacimiento", "value": "2000-05-10", "type": "text" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Registro con contraseña inválida (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.test('Status 400 Bad Request', () => pm.response.to.have.status(400));"]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/registro",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "nombre", "value": "Ana", "type": "text" },
+                { "key": "apellido", "value": "Gómez", "type": "text" },
+                { "key": "correo", "value": "ana.invalida@test.com", "type": "text" },
+                { "key": "nombreUsuario", "value": "ana_invalida", "type": "text" },
+                { "key": "password", "value": "corta", "type": "text" },
+                { "key": "repetirPassword", "value": "corta", "type": "text" },
+                { "key": "fechaNacimiento", "value": "2000-05-10", "type": "text" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Registro con contraseñas distintas (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.test('Status 400 Bad Request', () => pm.response.to.have.status(400));"]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/registro",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "nombre", "value": "Ana", "type": "text" },
+                { "key": "apellido", "value": "Gómez", "type": "text" },
+                { "key": "correo", "value": "ana.distinta@test.com", "type": "text" },
+                { "key": "nombreUsuario", "value": "ana_distinta", "type": "text" },
+                { "key": "password", "value": "Clave1234", "type": "text" },
+                { "key": "repetirPassword", "value": "Clave9999", "type": "text" },
+                { "key": "fechaNacimiento", "value": "2000-05-10", "type": "text" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Login con nombre de usuario (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200 OK', () => pm.response.to.have.status(200));",
+                  "pm.test('Devuelve los datos del usuario', () => pm.expect(pm.response.json().nombreUsuario).to.eql(pm.collectionVariables.get('nombreUsuario')));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identificador\": \"{{nombreUsuario}}\",\n  \"password\": \"{{password}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login con correo (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.test('Status 200 OK', () => pm.response.to.have.status(200));"]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identificador\": \"{{correo}}\",\n  \"password\": \"{{password}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login con contraseña incorrecta (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.test('Status 401 Unauthorized', () => pm.response.to.have.status(401));"]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identificador\": \"{{nombreUsuario}}\",\n  \"password\": \"Incorrecta123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login sin datos (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.test('Status 400 Bad Request', () => pm.response.to.have.status(400));"]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{}" }
+          }
+        }
+      ]
+    }
+  ]
+}

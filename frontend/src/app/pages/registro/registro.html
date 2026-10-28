@@ -1,0 +1,165 @@
+<main class="auth">
+  <section class="auth-form">
+    <div class="kicker">Datos de la cuenta</div>
+    <h1>Crear cuenta</h1>
+    <p class="lead">
+      Necesitás una cuenta para ver y publicar en Ágora. Tu usuario es único y no se puede cambiar
+      después.
+    </p>
+
+    <form class="form-stack" [formGroup]="form" (ngSubmit)="enviar()" novalidate>
+      <div class="row-2">
+        <div class="field">
+          <label for="nombre">Nombre</label>
+          <input id="nombre" class="input" formControlName="nombre" autocomplete="given-name" [class.invalid]="invalido('nombre')" />
+          @if (invalido('nombre')) {
+            <div class="error">El nombre es obligatorio (máx. 50).</div>
+          }
+        </div>
+        <div class="field">
+          <label for="apellido">Apellido</label>
+          <input id="apellido" class="input" formControlName="apellido" autocomplete="family-name" [class.invalid]="invalido('apellido')" />
+          @if (invalido('apellido')) {
+            <div class="error">El apellido es obligatorio (máx. 50).</div>
+          }
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="nombreUsuario">Usuario</label>
+        <input id="nombreUsuario" class="input" formControlName="nombreUsuario" autocomplete="username" [class.invalid]="invalido('nombreUsuario')" />
+        @if (invalido('nombreUsuario')) {
+          <div class="error">
+            @if (form.controls.nombreUsuario.hasError('required')) {
+              El nombre de usuario es obligatorio.
+            } @else if (form.controls.nombreUsuario.hasError('pattern')) {
+              Solo letras, números, puntos y guiones bajos.
+            } @else {
+              Debe tener entre 3 y 30 caracteres.
+            }
+          </div>
+        } @else if (usuario()) {
+          <div class="hint">Tu dirección: ágora.red/&#64;{{ usuario() }}</div>
+        }
+      </div>
+
+      <div class="field">
+        <label for="correo">Correo</label>
+        <input id="correo" class="input" type="email" formControlName="correo" autocomplete="email" [class.invalid]="invalido('correo')" />
+        @if (invalido('correo')) {
+          <div class="error">
+            {{ form.controls.correo.hasError('required') ? 'El correo es obligatorio.' : 'Ingresá un correo válido.' }}
+          </div>
+        }
+      </div>
+
+      <div class="row-2">
+        <div class="field">
+          <label for="password">Contraseña</label>
+          <input id="password" class="input" type="password" formControlName="password" autocomplete="new-password" [class.invalid]="invalido('password')" />
+          @if (invalido('password')) {
+            <div class="error">Mínimo 8 caracteres, una mayúscula y un número.</div>
+          }
+        </div>
+        <div class="field">
+          <label for="repetirPassword">Repetir contraseña</label>
+          <input
+            id="repetirPassword"
+            class="input"
+            type="password"
+            formControlName="repetirPassword"
+            autocomplete="new-password"
+            [class.invalid]="invalido('repetirPassword') || noCoinciden"
+          />
+          @if (invalido('repetirPassword')) {
+            <div class="error">Repetí la contraseña.</div>
+          } @else if (noCoinciden) {
+            <div class="error">Las contraseñas no coinciden.</div>
+          }
+        </div>
+      </div>
+
+      <div class="fuerza" aria-live="polite">
+        @for (n of barras; track n) {
+          <div class="barra" [class.llena]="n <= fuerza()"></div>
+        }
+        <span>{{ etiquetaFuerza() || 'Mín. 8 caracteres, una mayúscula y un número' }}</span>
+      </div>
+
+      <div class="field">
+        <label for="fechaNacimiento">Fecha de nacimiento</label>
+        <input id="fechaNacimiento" class="input" type="date" formControlName="fechaNacimiento" [class.invalid]="invalido('fechaNacimiento')" />
+        @if (invalido('fechaNacimiento')) {
+          <div class="error">
+            {{ form.controls.fechaNacimiento.hasError('required') ? 'La fecha de nacimiento es obligatoria.' : 'Tenés que tener al menos 13 años.' }}
+          </div>
+        }
+      </div>
+
+      <div class="field">
+        <label for="descripcion">Descripción breve</label>
+        <textarea id="descripcion" class="input" rows="3" maxlength="200" formControlName="descripcion"></textarea>
+        <div class="hint">{{ descripcion().length }} / 200 caracteres</div>
+      </div>
+
+      <div class="field">
+        <label for="imagenPerfil">Imagen de perfil</label>
+        <div class="foto">
+          <div class="cuadro">
+            @if (preview(); as src) {
+              <img class="grayscale" [src]="src" alt="Vista previa de la imagen de perfil" />
+            }
+          </div>
+          <div>
+            <label for="imagenPerfil" class="btn btn-secondary">Elegir imagen</label>
+            <input
+              id="imagenPerfil"
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              (change)="seleccionarImagen($event)"
+            />
+            <div class="hint">{{ imagen()?.name ?? 'Opcional · JPG, PNG, WEBP o GIF · hasta 4 MB' }}</div>
+            @if (errorImagen(); as e) {
+              <div class="error">{{ e }}</div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <label class="check">
+          <input type="checkbox" formControlName="terminos" />
+          <span>Acepto las normas de convivencia y la política de privacidad.</span>
+        </label>
+        @if (invalido('terminos')) {
+          <div class="error terminos">Tenés que aceptar las normas para crear la cuenta.</div>
+        }
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block" [disabled]="enviando()">
+        {{ enviando() ? 'Creando cuenta…' : 'Crear mi cuenta' }}
+      </button>
+      <div class="rule"></div>
+      <div class="switch-line">
+        <span>¿Ya tenés cuenta?</span>
+        <a routerLink="/login">Iniciar sesión</a>
+      </div>
+    </form>
+  </section>
+
+  <section class="poster">
+    <div class="brand">Ágora</div>
+    <div>
+      <div class="headline">Una cuenta,<br />una voz.</div>
+      <div class="white-rule"></div>
+      <ul>
+        <li><b>01</b><span>Publicá texto e imágenes sin límite de largo.</span></li>
+        <li><b>02</b><span>Reaccioná y comentá lo que publican los demás.</span></li>
+        <li><b>03</b><span>Tu perfil es tuyo: editalo cuando quieras.</span></li>
+      </ul>
+    </div>
+    <div class="foot nota">
+      Al registrarte entrás directo a tu cronología. No publicamos nada en tu nombre.
+    </div>
+  </section>
+</main>

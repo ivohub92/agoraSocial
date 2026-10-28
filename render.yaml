@@ -1,0 +1,15 @@
+# Blueprint para desplegar el backend en Render (https://render.com)
+services:
+  - type: web
+    name: red-social-api
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install --legacy-peer-deps && npm run build
+    startCommand: npm run start:prod
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      - key: PUBLIC_URL
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false

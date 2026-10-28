@@ -1,0 +1,21 @@
+@if (modal.actual(); as datos) {
+  <div class="dialog-backdrop" (click)="modal.cerrar()">
+    <div
+      class="dialog"
+      [class.error]="datos.tipo === 'error'"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-titulo"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="kicker">{{ etiquetas[datos.tipo] }}</div>
+      <div class="dialog-title" id="modal-titulo">{{ datos.titulo }}</div>
+      <div class="dialog-body">{{ datos.mensaje }}</div>
+      <div class="dialog-actions">
+        <button #boton class="btn btn-primary" (click)="modal.cerrar()">
+          {{ datos.textoBoton ?? 'Aceptar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

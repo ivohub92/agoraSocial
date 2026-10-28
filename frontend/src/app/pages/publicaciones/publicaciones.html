@@ -1,0 +1,60 @@
+<div class="cols">
+  <aside class="side left">
+    @if (auth.usuario(); as u) {
+      <app-avatar class="foto" [usuario]="u" variante="propio" />
+      <h4>{{ u.nombre }} {{ u.apellido }}</h4>
+      <div class="handle">
+        &#64;{{ u.nombreUsuario }}
+        <span class="tag" [class]="u.perfil === 'administrador' ? 'tag-accent' : 'tag-outline'">
+          {{ u.perfil === 'administrador' ? 'Administrador' : 'Usuario' }}
+        </span>
+      </div>
+      @if (u.descripcion) {
+        <p class="bio">{{ u.descripcion }}</p>
+      }
+      <div class="stats">
+        <div><div class="num">{{ edad() }}</div><div class="lbl">Años</div></div>
+        <div><div class="num">{{ u.createdAt | date: 'yyyy' }}</div><div class="lbl">Desde</div></div>
+      </div>
+      <a routerLink="/mi-perfil" class="btn btn-secondary btn-block">Ver mi perfil</a>
+    } @else {
+      <div class="kicker">Sin sesión</div>
+      <h4>Entrá a Ágora</h4>
+      <p class="bio">Iniciá sesión o creá una cuenta para ver tu perfil y publicar.</p>
+      <a routerLink="/login" class="btn btn-primary btn-block">Iniciar sesión</a>
+      <a routerLink="/registro" class="btn btn-ghost btn-block">Crear una cuenta</a>
+    }
+  </aside>
+
+  <main class="col-main">
+    <div class="section-head">
+      <div class="title">Tu cronología</div>
+      <div class="line"></div>
+      <div class="meta">Más recientes</div>
+    </div>
+
+    <div class="empty">
+      <div class="kicker">Cronología vacía</div>
+      <h3>Todavía no hay publicaciones</h3>
+      <p>
+        Acá vas a ver lo que publica la comunidad, ordenado por fecha. Vas a poder dar “Me gusta” y
+        comentar cada publicación.
+      </p>
+    </div>
+  </main>
+
+  <aside class="side right">
+    <div class="side-title">Normas de convivencia</div>
+    <ol>
+      <li><b>01</b><span>Publicá con tu nombre: las cuentas son personales.</span></li>
+      <li><b>02</b><span>Discutí ideas, no personas.</span></li>
+      <li><b>03</b><span>Las imágenes tienen que ser tuyas o tener permiso.</span></li>
+    </ol>
+    <div class="pie">
+      Ágora · 2026
+      @if (auth.logueado()) {
+        <br /><button class="link" (click)="salir()">Cerrar sesión</button>
+      }
+    </div>
+  </aside>
+</div>
