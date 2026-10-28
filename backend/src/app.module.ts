@@ -15,6 +15,9 @@ import { UsersModule } from './users/users.module.js';
       useFactory: (config: ConfigService) => {
         const uri = config.get<string>('MONGODB_URI')?.trim();
         if (!uri) {
+          if ('MONGODB_URI' in process.env) {
+            throw new Error('La variable de entorno MONGODB_URI existe pero está vacía.');
+          }
           // Solo se muestran nombres de variables, nunca sus valores.
           const parecidas = Object.keys(process.env).filter((k) => /mongo|uri/i.test(k));
           throw new Error(
@@ -22,7 +25,8 @@ import { UsersModule } from './users/users.module.js';
               `Variables con nombre parecido: ${parecidas.join(', ') || 'ninguna'}`,
           );
         }
-        return { uri };
+        // Pocos reintentos y timeout corto: si la conexión falla, el error aparece rápido.
+        return { uri, retryAttempts: 2, serverSelectionTimeoutMS: 10_000 };
       },
     }),
     // En local las imágenes se sirven desde /uploads; en Vercel las sirve Vercel Blob.
